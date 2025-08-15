@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Is it Thursday?</title>
+    <!-- PyScript (runs Python in the browser) -->
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+        margin: 0;
+      }
+      .card {
+        text-align: center;
+        padding: 2.5rem 3rem;
+        border-radius: 1.25rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        max-width: 28rem;
+      }
+      h1 {
+        font-size: clamp(2rem, 6vw, 3rem);
+        margin: 0 0 0.5rem 0;
+      }
+      p { margin: 0.5rem 0 0 0; opacity: 0.8; }
+      footer { position: fixed; inset: auto 0 1rem 0; text-align: center; font-size: 0.85rem; opacity: 0.7; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1 id="answer" aria-live="polite">Checking…</h1>
+      <p id="detail"></p>
+    </main>
+
+    <footer>
+      Uses Python in-browser via <a href="https://pyscript.net" target="_blank" rel="noreferrer noopener">PyScript</a>.
+    </footer>
+
+    <!-- Python that runs in the visitor's browser -->
+    <py-script>
+from js import Date, document, Intl
+
+# Use the visitor's local time (from the browser)
+today = Date()
+is_thursday = today.getDay() == 4  # 0=Sun … 4=Thu
+
+msg = "It's Thursday" if is_thursday else "It's not Thursday"
+document.getElementById("answer").textContent = msg
+
+# Nicety: show their local date for transparency
+formatter = Intl.DateTimeFormat(
+    None,
+    { "weekday": "long", "year": "numeric", "month": "long", "day": "numeric" }
+)
+document.getElementById("detail").textContent = f"Your local date is {formatter.format(today)}."
+    </py-script>
+
+    <noscript>
+      <p style="text-align:center;padding:1rem">This page needs JavaScript enabled to run Python (PyScript).</p>
+    </noscript>
+  </body>
+</html>
